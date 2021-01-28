@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="align-center">
+    <h2>Ticket n° {{ ticket.id }}</h2>
+</div>
+
+<div>
+    <h5>{{ ticket.user }} asked for a review</h5>
+    <h5>{{ ticket.title }}</h5>
+    <h5>{{ ticket.description }}</h5>
+</div>
+{% endblock content %}

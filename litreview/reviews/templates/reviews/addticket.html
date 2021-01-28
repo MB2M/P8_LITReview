@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+{% if form.instance.id %}
+<form action="{% url 'reviews:addticket' form.instance.id %}" method="POST">
+    {% else %}
+    <form action="{% url 'reviews:addticket'%}" method="POST">
+        {% endif %}
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Publish" />
+    </form>
+    {% endblock content %}

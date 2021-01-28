@@ -1,15 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div>
-        <i>TODO: feed</i>
-    </div>
+<div>
+    <i>TODO: feed</i>
+</div>
 
     {% if tickets %}
+    <ul>
         {% for ticket in tickets %}
-            <a href="#">{{ ticket.title }}</a>
+        <li><a href="{% url 'reviews:viewticket' ticket.id %}">{{ ticket.title }}</a>
+            (<a href="{% url 'reviews:addticket' ticket.id %}">Edit</a>
+            <a href="{% url 'reviews:deleteticket' ticket.id %}">Delete</a>)
+        </li>
         {% endfor %}
+    </ul>
     {% else %}
-        <i>add some ticket first</i>
+    <i>add some ticket first</i>
     {% endif %}
 {% endblock content %}
