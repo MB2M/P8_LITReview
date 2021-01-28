@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        <i>TODO: feed</i>
+    </div>
+
+    {% if tickets %}
+        {% for ticket in tickets %}
+            <a href="#">{{ ticket.title }}</a>
+        {% endfor %}
+    {% else %}
+        <i>add some ticket first</i>
+    {% endif %}
+{% endblock content %}
