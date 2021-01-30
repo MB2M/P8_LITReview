@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <div class="align-center">
     <h2>Ticket n° {{ ticket.id }}</h2>
 </div>
@@ -10,11 +11,11 @@
     <h5>{{ ticket.title }}</h5>
     <h5>{{ ticket.description }}</h5>
 </div>
-<div>
-    {% for review in ticket.review_set.all %}
-        <p>{{ review.rating }}</p>
-        <p>{{ review.headline }}</p>
-        <p>{{ review.body }}</p>
-    {% endfor %}
-</div>
+
+<form action="{% url 'reviews:reviewticket' ticket.id%}" method="POST">
+    {% csrf_token %}
+    <div>{{ form }}</div>
+    <input type="submit" value="Publish" />
+</form>
+
 {% endblock content %}

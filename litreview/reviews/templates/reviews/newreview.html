@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action="{% url 'reviews:newreview'%}" method="POST">
+    {% csrf_token %}
+    <div>{{ form_ticket }}</div>
+    <div>{{ form_review }}</div>
+    <input type="submit" value="Publish" />
+</form>
+
+{% endblock content %}

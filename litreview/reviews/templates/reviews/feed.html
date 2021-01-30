@@ -1,20 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div>
-    <i>TODO: feed</i>
+<div class="raw align-items-center">
+    <div class="col-12 text-center">
+        <a href="{% url 'reviews:newreview' %}" class="btn btn-primary">Ajouter une revue</a>
+        <a href="{% url 'reviews:addticket' %}" class="btn btn-primary">Ajouter un ticket</a>
+    </div>
 </div>
 
     {% if tickets %}
     <ul>
         {% for ticket in tickets %}
-        <li><a href="{% url 'reviews:viewticket' ticket.id %}">{{ ticket.title }}</a>
-            (<a href="{% url 'reviews:addticket' ticket.id %}">Edit</a>
-            <a href="{% url 'reviews:deleteticket' ticket.id %}">Delete</a>)
-        </li>
+            <div class="raw">
+                <div class="col-8">
+                    <div>
+                        <span>
+                            {% if ticket.user == request.user %}
+                                Vous avez demandé une critique
+                            {% else %}
+                                {{ ticket.user }} a demandé une critique
+                            {% endif %}
+                        </span>
+                        <span>{{ticket.time_created}}</span>
+                    </div>
+                    <a href="{% url 'reviews:viewticket' ticket.id %}">{{ ticket.title }}</a>
+                    (<a href="{% url 'reviews:addticket' ticket.id %}">Edit</a>
+                    <a href="{% url 'reviews:deleteticket' ticket.id %}">Delete</a>)
+                    <a href="{% url 'reviews:reviewticket' ticket.id %}">
+                        {% if ticket.review_set.all %}
+                            Edit my review
+                        {% else %}
+                            post a review
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
         {% endfor %}
     </ul>
     {% else %}
     <i>add some ticket first</i>
     {% endif %}
+
 {% endblock content %}

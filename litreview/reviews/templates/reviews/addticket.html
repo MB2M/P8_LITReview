@@ -3,13 +3,16 @@
 
 {% block content %}
 
-{% if form.instance.id %}
-<form action="{% url 'reviews:addticket' form.instance.id %}" method="POST">
-    {% else %}
+{% if form_ticket.instance.id %}
+    <form action="{% url 'reviews:addticket' form_ticket.instance.id %}" method="POST">
+{% else %}
     <form action="{% url 'reviews:addticket'%}" method="POST">
-        {% endif %}
+{% endif %}
         {% csrf_token %}
-        {{ form }}
+        <div>{{ form_ticket }}</div>
         <input type="submit" value="Publish" />
     </form>
+
+
+
     {% endblock content %}
