@@ -1,21 +1,50 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<div class="align-center">
-    <h2>Ticket n° {{ ticket.id }}</h2>
-</div>
-
-<div>
-    <h5>{{ ticket.user }} asked for a review</h5>
-    <h5>{{ ticket.title }}</h5>
-    <h5>{{ ticket.description }}</h5>
-</div>
-
-<form action="{% url 'reviews:reviewticket' ticket.id%}" method="POST">
-    {% csrf_token %}
-    <div>{{ form }}</div>
-    <input type="submit" value="Publish" />
-</form>
-
-{% endblock content %}
+<h3 class="text-center">Créer une critique</h3>
+<div class="row justify-content-center">
+    <div class="col-9">
+        <div class="border p-2">
+            <div class="align-center">
+                <h5>Vous êtes en train de répondre à :</h5>
+            </div>
+            <div class="border p-2 d-flex">
+                <div class="d-block">
+                    <p>{{ ticket.user }} asked for a review</p>
+                    <p>{{ ticket.title }}</p>
+                    <p>{{ ticket.description }}</p>
+                </div>
+                <span class="ms-auto"><small>{{ ticket.time_created}}</small></span>
+            </div>
+        </div>
+        <div class="border mt-2 p-2">
+            <h5>
+                Critique
+            </h5>
+            <form action="{% url 'reviews:reviewticket' ticket.id%}" method="POST">
+                {% csrf_token %}
+                <div>
+                    <p>
+                        {{ form.headline.label_tag }}
+                        {{ form.headline }}
+                    </p>
+                    <span>Note:</span>
+                    <div>
+                        {% for i in max_rate %}
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="rating" id="inlineRadio{{ i }}"
+                                value="{{ i }}" {% if review.rating == i %} checked {% endif %}>
+                            <label class="form-check-label" for="inlineRadio{{i}}">{{ i }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <p>
+                        {{ form.body.label_tag }}
+                        {{ form.body }}
+                    </p>
+                </div>
+                <input type="submit" value="Publier" class="btn btn-primary"/>
+            </form>
+        </div>
+    </div>
+    {% endblock content %}

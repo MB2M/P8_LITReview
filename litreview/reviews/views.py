@@ -106,12 +106,14 @@ def review_ticket(request, ticket_id):
     user_review = ticket.review_set.filter(user_id=request.user.id)
     if user_review:
         review = user_review[0]
+        print('------', review.rating)
     else:
         review = None
     if request.method == 'POST':
         form = ReviewForm(request.POST, instance=review)
         if form.is_valid():
             review = form.save(commit=False)
+            review.rating = request.POST['rating']
             review.user = request.user
             review.ticket = ticket
             review.save()
@@ -120,7 +122,9 @@ def review_ticket(request, ticket_id):
         form = ReviewForm(instance=review)
     return render(request, 'reviews/reviewticket.html', {
         'ticket': ticket,
-        'form': form
+        'form': form,
+        'max_rate': range(6),
+        'review': review,
     })
 
 
