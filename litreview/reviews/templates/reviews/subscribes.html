@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="text-center p-4">
+        <h3>Suivre d'autres utilisateurs</h3>
+        <form action="{% url 'reviews:subscribes' %}" method="POST">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+            <div class="col-7">
+                {{ form }}
+            </div>
+            <div class="col-2">
+                <input type="submit" value="Envoyer" class="btn btn-primary">
+            </div>
+        </div>
+        </form>
+        <p>{{ error_message }}</p>
+    </div>
+    <div class="text-center p-4">
+        <h2>Abonnements</h2>
+        <div>
+            {% for follow in follows %}
+            <div class="row justify-content-center">
+                <div class="col-9 d-flex border p-0">
+                    <span class="ps-2 me-auto align-self-center"> {{ follow.user.username }}</span>
+                    <a class="btn btn-secondary" href="{% url 'reviews:unsubscribe' follow.id %}">Se Désabonner</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="text-center p-4">
+        <h2>Abonnés</h2>
+        <div>
+            {% for follower in followers %}
+            <div class="row justify-content-center">
+                <div class="ps-2 col-9 d-flex border p-0">
+                    <span class="me-auto align-self-center"> {{ follower.followed_user.username }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

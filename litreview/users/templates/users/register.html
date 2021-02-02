@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <form action="{% url 'users:register' %}" method="post">
-        {% csrf_token %}
-        <div class="col-md-8 col-md-offset-2">
+<form action="{% url 'users:register' %}" method="post">
+    {% csrf_token %}
+    <div class="col-md-8 col-md-offset-2">
+        <div class="row justify-content-center">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h2>Register</h2>
                 </div>
                 <div class="panel-body">
                     {% if form.errors %}
-                        {% for field in form %}
-                            {% if field.errors %}<li>{{ field.label }}: {{ field.errors|striptags }}</li>{% endif %}
-                        {% endfor %}
+                    {% for field in form %}
+                    {% if field.errors %}<li>{{ field.label }}: {{ field.errors|striptags }}</li>{% endif %}
+                    {% endfor %}
                     {% endif %}
                     {% if error_messages %}
-                        <p class="bg-danger p-d ml-b">{{ error_message }}</p>
+                    <p class="bg-danger p-d ml-b">{{ error_message }}</p>
                     {% endif %}
                     <div class="form-group clearfix">
                         <label for="{{ form.username.id_for_label }}"
@@ -39,12 +39,15 @@
                             {{ form.password_repeat }}
                         </div>
                     </div>
-                    <div class="col-md-6 col-md-offset-4 mt-2">
-                        <input type="submit" value="Register" class="btn btn-primary">
+                    <div class="row ">
+                        <div class="col-md-6 mt-2 justify-content-end d-flex">
+                            <a href="{% url 'users:login' %}" class="btn btn-primary mx-2">Retour</a>
+                            <input type="submit" value="Register" class="btn btn-primary">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
-</div>
+    </div>
+</form>
 {% endblock %}

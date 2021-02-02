@@ -10,5 +10,7 @@ urlpatterns = [
     path('<int:ticket_id>/', views.view_ticket, name='viewticket'),
     path('deleteticket/<int:ticket_id>/', views.delete_ticket, name='deleteticket'),
     path('newreview/', views.new_review, name='newreview'),
-    path('<int:ticket_id>/review', views.review_ticket, name='reviewticket')
+    path('<int:ticket_id>/review', views.review_ticket, name='reviewticket'),
+    path('subscribes/', views.subscribes, name='subscribes'),
+    path('subscribes/<int:user_follow_id>/delete', views.unsubscribe, name='unsubscribe')
 ]

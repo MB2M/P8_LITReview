@@ -4,6 +4,14 @@
 
 <form action="{% url 'reviews:newreview'%}" method="POST">
     {% csrf_token %}
+    
+    {% for i in max_rate %}
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="rating" id="inlineRadio{{ i }}" value="{{ i }}">
+        <label class="form-check-label" for="inlineRadio{{i}}">{{ i }}</label>
+      </div>
+    {% endfor %}
+        
     <div>{{ form_ticket }}</div>
     <div>{{ form_review }}</div>
     <input type="submit" value="Publish" />
