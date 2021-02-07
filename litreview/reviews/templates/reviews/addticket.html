@@ -6,9 +6,9 @@
 <div class="row justify-content-center">
     <div class="col-9">
 {% if form_ticket.instance.id %}
-    <form action="{% url 'reviews:addticket' form_ticket.instance.id %}" method="POST">
+    <form action="{% url 'reviews:addticket' form_ticket.instance.id %}" method="POST" enctype="multipart/form-data">
 {% else %}
-    <form action="{% url 'reviews:addticket'%}" method="POST">
+    <form action="{% url 'reviews:addticket'%}" method="POST" enctype="multipart/form-data">
 {% endif %}
         {% csrf_token %}
         <div>{{ form_ticket }}</div>

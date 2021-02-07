@@ -1,3 +1,7 @@
+from itertools import chain
+
+from django.db.models.fields import CharField
+from django.db.models import Value
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -7,11 +11,41 @@ from .models import Review, Ticket, UserFollows
 from .forms import FollowForm, TicketForm, ReviewForm
 
 
-
 @login_required
 def feed(request):
-    tickets = Ticket.objects.filter(user=request.user.id)
-    return render(request, 'reviews/feed.html', locals())
+
+    follows = [follow.user.id for follow in UserFollows.objects.filter(followed_user=request.user.id)]
+    follows.append(request.user.id)
+
+    tickets= Ticket.objects.filter(user__in=follows)
+    tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+
+    reviews = Review.objects.filter(user__in=follows)
+    reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
+
+    posts = sorted(
+        chain(reviews, tickets),
+        key=lambda post: post.time_created,
+        reverse=True
+    )
+    return render(request, 'reviews/feed.html', {'posts': posts})
+
+
+@login_required
+def posts(request):
+
+    tickets= Ticket.objects.filter(user=request.user.id)
+    tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+
+    reviews = Review.objects.filter(user=request.user.id)
+    reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
+
+    posts = sorted(
+        chain(reviews, tickets),
+        key=lambda post: post.time_created,
+        reverse=True
+    )
+    return render(request, 'reviews/posts.html', {'posts': posts})
 
 
 @login_required
@@ -19,7 +53,7 @@ def add_ticket(request, ticket_id=None):
     ticket = get_object_or_404(
         Ticket, pk=ticket_id, user=request.user.id) if ticket_id is not None else None
     if request.method == 'POST':
-        form_ticket = TicketForm(request.POST, instance=ticket)
+        form_ticket = TicketForm(request.POST, request.FILES, instance=ticket)
         if form_ticket.is_valid():
             ticket = form_ticket.save(commit=False)
             if ticket.user_id is None:
@@ -31,35 +65,6 @@ def add_ticket(request, ticket_id=None):
     return render(request, 'reviews/addticket.html', {
         'form_ticket': form_ticket,
     })
-
-# @login_required
-# def add_ticket_2(request, ticket_id=None, review=False):
-#     ticket = get_object_or_404(Ticket, pk=ticket_id) if ticket_id is not None else None
-#     if request.method == 'POST':
-#         form_ticket = TicketForm(request.POST, instance=ticket)
-#         if form_ticket.is_valid():
-#             ticket = form_ticket.save(commit=False)
-#             if ticket.user_id is None:
-#                 ticket.user = request.user
-#             if review:
-#                 form_review = ReviewForm(request.POST)
-#                 if form_review.is_valid():
-#                     ticket.save()
-#                     review = form_review.save(commit=False)
-#                     review.user = request.user
-#                     review.ticket = ticket
-#                     review.save()
-#             else:
-#                 ticket.save()
-#             return redirect('reviews:feed')
-
-#     else:
-#         form_ticket = TicketForm(instance=ticket)
-#         form_review = ReviewForm()
-#     return render(request, 'reviews/addticket.html', {
-#         'form_ticket': form_ticket,
-#         'form_review': form_review,
-#         })
 
 
 @login_required
@@ -99,6 +104,12 @@ def new_review(request):
         'max_rate': range(6),
     })
 
+@login_required
+def delete_review(request, review_id):
+    ticket = Ticket.objects.get(pk=review_id, user=request.user.id)
+    ticket.delete()
+    return redirect('reviews:feed')
+
 
 @login_required
 def review_ticket(request, ticket_id):
@@ -106,7 +117,6 @@ def review_ticket(request, ticket_id):
     user_review = ticket.review_set.filter(user_id=request.user.id)
     if user_review:
         review = user_review[0]
-        print('------', review.rating)
     else:
         review = None
     if request.method == 'POST':
@@ -161,8 +171,11 @@ def subscribes(request):
         'error_message': error_message,
     })
 
+
 @login_required
 def unsubscribe(request, user_follow_id):
     user_follow = UserFollows.objects.get(pk=user_follow_id, user=request.user.id)
     user_follow.delete()
     return redirect('reviews:subscribes')
+
+

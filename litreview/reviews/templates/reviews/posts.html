@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% load reviews %}
+
+{% block content %}
+    {% if posts %}
+        <ul>
+            <div class="row justify-content-center m-3">
+                <div class="col-8">
+                    {% for post in posts %}
+                        <div class="border p-2 m-2">
+                            {% if post.content_type == 'TICKET' %}
+                                <div class="p-2 d-flex">
+                                    <div class="flex-fill">
+                                        <p><small>Vous avez publié un ticket</small></p>
+                                        <h5>{{ post.title }}</h5>
+                                        <p>{{ post.description }}</p>
+                                        <div class="w-25">
+                                            {% if post.image %}
+                                            <img class="img-fluid" src="../../media/{{ post.image }}" alt="book-image">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <span class="ms-auto"><small>{{ post.time_created}}</small></span>
+                                </div>
+                                <a href="{% url 'reviews:addticket' post.id %}" class="btn btn-primary">Edit</a>
+                                <a href="{% url 'reviews:deleteticket' post.id %}" class="btn btn-secondary">Delete</a>
+                            {% elif post.content_type == 'REVIEW' %}
+                                <div class="p-2 d-flex">
+                                    <div class="flex-fill">
+                                        <p><small>Vous avez publié une critique</small></p>
+                                        <h5>{{ post.headline }} - {{ post.rating }}</h5>
+                                        <div> {{ post.body }} </div>
+                                    </div>
+                                    <span class="ms-auto"><small>{{ post.time_created}}</small></span>
+                                </div>
+                                <div class="border m-2">
+                                    <p>Ticket - Vous</p>
+                                    <p>{{ post.ticket.title }}</p>
+                                    <p>{{ post.ticket.description }}</p>
+                                    <div class="w-25">
+                                        {% if post.image %}
+                                        <img class="img-fluid" src="../../media/{{ post.image }}" alt="book-image">
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="{% url 'reviews:reviewticket' post.ticket.id %}" class="btn btn-primary">Edit</a>
+                                    <a href="{% url 'reviews:deleteticket' post.ticket.id %}" class="btn btn-secondary">Delete</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </ul>
+    {% else %}
+        <i>add some ticket first</i>
+    {% endif %}
+{% endblock content %}
+
+                           

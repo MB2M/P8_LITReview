@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load reviews %}
+
 {% block content %}
 <div class="raw align-items-center">
     <div class="col-12 text-center">
@@ -8,31 +10,92 @@
     </div>
 </div>
 
-    {% if tickets %}
+    {% if posts %}
     <ul>
-        {% for ticket in tickets %}
-            <div class="raw">
+        {% for post in posts %}
+            <div class="row justify-content-center m-3">
                 <div class="col-8">
-                    <div>
-                        <span>
-                            {% if ticket.user == request.user %}
-                                Vous avez demandé une critique
-                            {% else %}
-                                {{ ticket.user }} a demandé une critique
+                    <div class="border">
+                            {% if post.content_type == 'TICKET' %}
+                                {% if post.user == request.user %}
+                                    <div class="p-2 d-flex">
+                                        <div class="flex-fill">
+                                            <p><small>Vous avez demandé une critique</small></p>
+                                            <h5>{{ post.title }}</h5>
+                                            <p>{{ post.description }}</p>
+                                            <div class="w-25">
+                                                {% if post.image %}
+                                                <img class="img-fluid" src="../media/{{ post.image }}" alt="book-image">
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <span class="ms-auto"><small>{{ post.time_created}}</small></span>
+                                    </div>
+                                {% else %}
+                                    <div class="p-2 d-flex">
+                                        <div class="flex-fill">
+                                            <p>{{ post.user }} asked for a review</p>
+                                            <p>{{ post.title }}</p>
+                                            <p>{{ post.description }}</p>
+                                            <div class="w-25">
+                                                {% if post.image %}
+                                                <img class="img-fluid" src="../media/{{ post.image }}" alt="book-image">
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <span class="ms-auto"><small>{{ post.time_created}}</small></span>
+                                    </div>
+                                    {% if not post|ticket_review_of_user:request.user %}
+                                        <div class="text-end">
+                                            <a href="{% url 'reviews:reviewticket' post.id %}" class="btn btn-primary m-2 ms-auto">Créer une critque</a>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% elif post.content_type == 'REVIEW' %}
+                                {% if post.user == request.user %}
+                                    <div class="p-2 d-flex">
+                                        <div class="flex-fill">
+                                            <p><small>Vous avez publié une critique</small></p>
+                                            <h5>{{ post.headline }} - {{ post.rating }}</h5>
+                                            <div> {{ post.body }} </div>
+                                        </div>
+                                        <span class="ms-auto"><small>{{ post.time_created}}</small></span>
+                                    </div>
+                                    <div class="p-2 d-flex border m-2">
+                                        <div class="flex-fill">
+                                            <p>{{ post.ticket.user }} asked for a review</p>
+                                            <p>{{ post.ticket.title }}</p>
+                                            <p>{{ post.ticket.description }}</p>
+                                            <div class="w-25">
+                                                {% if post.image %}
+                                                <img class="img-fluid" src="../media/{{ post.image }}" alt="book-image">
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <span class="ms-auto"><small>{{ post.time_created}}</small></span>
+                                    </div>
+                                {% else %}
+                                    <div class="p-2 d-flex">
+                                        <div class="flex-fill">
+                                            <p><small>{{ post.user }} a publié une critique</small></p>
+                                            <h5>{{ post.headline }} - {{ post.rating }}</h5>
+                                            <div> {{ post.body }} </div>
+                                        </div>
+                                        <span class="ms-auto"><small>{{ post.time_created}}</small></span>
+                                    </div>
+                                    <div class="border m-2">
+                                        <p>{{ post.ticket.user }} asked for a review</p>
+                                        <p>{{ post.ticket.title }}</p>
+                                        <p>{{ post.ticket.description }}</p>
+                                        <div class="w-25">
+                                            {% if post.image %}
+                                            <img class="img-fluid" src="../media/{{ post.image }}" alt="book-image">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endif %}
                             {% endif %}
-                        </span>
-                        <span>{{ticket.time_created}}</span>
                     </div>
-                    <a href="{% url 'reviews:viewticket' ticket.id %}">{{ ticket.title }}</a>
-                    (<a href="{% url 'reviews:addticket' ticket.id %}">Edit</a>
-                    <a href="{% url 'reviews:deleteticket' ticket.id %}">Delete</a>)
-                    <a href="{% url 'reviews:reviewticket' ticket.id %}">
-                        {% if ticket.review_set.all %}
-                            Edit my review
-                        {% else %}
-                            post a review
-                        {% endif %}
-                    </a>
                 </div>
             </div>
         {% endfor %}
@@ -42,3 +105,14 @@
     {% endif %}
 
 {% endblock content %}
+
+<!-- <h5><a href="{% url 'reviews:viewticket' ticket.id %}">{{ post.title }}</a></h5>
+                                    (<a href="{% url 'reviews:addticket' ticket.id %}">Edit</a>
+                                    <a href="{% url 'reviews:deleteticket' ticket.id %}">Delete</a>)
+                                    <a href="{% url 'reviews:reviewticket' ticket.id %}">
+                                        {% if ticket.review_set.all %}
+                                            Edit my review
+                                        {% else %}
+                                            post a review
+                                        {% endif %}
+                                    </a> -->
