@@ -173,8 +173,8 @@ def subscribes(request):
 
 
 @login_required
-def unsubscribe(request, user_follow_id):
-    user_follow = UserFollows.objects.get(pk=user_follow_id, user=request.user.id)
+def unsubscribe(request, follow_id):
+    user_follow = UserFollows.objects.get(pk=follow_id)
     user_follow.delete()
     return redirect('reviews:subscribes')
 

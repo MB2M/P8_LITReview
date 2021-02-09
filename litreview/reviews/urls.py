@@ -13,5 +13,5 @@ urlpatterns = [
     path('newreview/', views.new_review, name='newreview'),
     path('<int:ticket_id>/review/', views.review_ticket, name='reviewticket'),
     path('subscribes/', views.subscribes, name='subscribes'),
-    path('subscribes/<int:user_follow_id>/delete', views.unsubscribe, name='unsubscribe')
+    path('subscribes/<int:follow_id>/delete', views.unsubscribe, name='unsubscribe')
 ]
