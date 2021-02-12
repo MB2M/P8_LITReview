@@ -1,7 +1,6 @@
 from django import forms
-from django.forms import widgets
 
-from .models import Ticket, Review, UserFollows
+from .models import Ticket, Review
 
 
 class TicketForm(forms.ModelForm):
@@ -22,7 +21,7 @@ class TicketForm(forms.ModelForm):
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = [ 'headline', 'body']
+        fields = ['headline', 'body']
         labels = {
             'headline': 'Titre',
             'body': 'Commentaire'
@@ -33,6 +32,8 @@ class ReviewForm(forms.ModelForm):
         }
 
 
-
 class FollowForm(forms.Form):
-    follow_username = forms.CharField(label='', max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    follow_username = forms.CharField(
+        label='', max_length=150,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+        )

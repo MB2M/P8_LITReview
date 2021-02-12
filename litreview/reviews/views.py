@@ -4,7 +4,7 @@ from django.db.models.fields import CharField
 from django.db.models import Value
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.db.utils import IntegrityError
 
 from .models import Review, Ticket, UserFollows
@@ -14,10 +14,12 @@ from .forms import FollowForm, TicketForm, ReviewForm
 @login_required
 def feed(request):
 
-    follows = [follow.user.id for follow in UserFollows.objects.filter(followed_user=request.user.id)]
+    follows = [follow.user.id for follow in UserFollows.objects.filter(
+        followed_user=request.user.id
+        )]
     follows.append(request.user.id)
 
-    tickets= Ticket.objects.filter(user__in=follows)
+    tickets = Ticket.objects.filter(user__in=follows)
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
 
     reviews = Review.objects.filter(user__in=follows)
@@ -34,7 +36,7 @@ def feed(request):
 @login_required
 def posts(request):
 
-    tickets= Ticket.objects.filter(user=request.user.id)
+    tickets = Ticket.objects.filter(user=request.user.id)
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
 
     reviews = Review.objects.filter(user=request.user.id)
@@ -50,8 +52,14 @@ def posts(request):
 
 @login_required
 def add_ticket(request, ticket_id=None):
-    ticket = get_object_or_404(
-        Ticket, pk=ticket_id, user=request.user.id) if ticket_id is not None else None
+    if ticket_id is not None:
+        ticket = get_object_or_404(
+            Ticket,
+            pk=ticket_id,
+            user=request.user.id
+        )
+    else:
+        None
     if request.method == 'POST':
         form_ticket = TicketForm(request.POST, request.FILES, instance=ticket)
         if form_ticket.is_valid():
@@ -103,6 +111,7 @@ def new_review(request):
         'form_review': form_review,
         'max_rate': range(6),
     })
+
 
 @login_required
 def delete_review(request, review_id):
@@ -177,5 +186,3 @@ def unsubscribe(request, follow_id):
     user_follow = UserFollows.objects.get(pk=follow_id)
     user_follow.delete()
     return redirect('reviews:subscribes')
-
-

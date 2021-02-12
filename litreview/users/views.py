@@ -1,8 +1,7 @@
-from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.shortcuts import redirect, render
-from django.http import HttpResponseRedirect
 from .forms import RegisterForm
+
 
 def user_register(request):
     template = 'users/register.html'
@@ -12,7 +11,7 @@ def user_register(request):
             if form.cleaned_data['password'] != form.cleaned_data['password_repeat']:
                 return render(request, template, {
                     'form': form,
-                    'error_message': 'Passwords do not match.'
+                    'error_message': 'Les mots de passe ne correspondent pas'
                 })
             else:
                 user = form.save()

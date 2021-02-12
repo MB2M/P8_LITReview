@@ -19,10 +19,14 @@ from django.urls.conf import include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from reviews import views
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('reviews/', include('reviews.urls')),
     path('accounts/', include('users.urls')),
+    path('', views.feed)
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

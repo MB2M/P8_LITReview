@@ -31,7 +31,7 @@
                                 {% else %}
                                         <div>
                                             <span class="float-end"><small>{{ post.time_created}}</small></span>
-                                            <p><small>{{ post.user }} asked for a review</small></p>
+                                            <p><small>{{ post.user }} a demandé une critique</small></p>
                                             <p>{{ post.title }}</p>
                                             <p>{{ post.description }}</p>
                                             <div class="p-2 w-25">
@@ -51,12 +51,18 @@
                                         <div>
                                             <span class="float-end"><small>{{ post.time_created}}</small></span>
                                             <p><small>Vous avez publié une critique</small></p>
-                                            <h5>{{ post.headline }} - {{ post.rating }}</h5>
+                                            <h5>{{ post.headline }} - 
+                                                {% with ''|center:post.rating as range %}
+                                                {% for i in range %}
+                                                    <span>&#x2605; </span>
+                                                {% endfor %}
+                                                {% endwith %}
+                                            </h5>
                                             <div> {{ post.body }} </div>
                                         </div>
                                     <div class="border m-2">
                                             <span class="float-end"><small>{{ post.ticket.time_created}}</small></span>
-                                            <p><small>{{ post.ticket.user }} asked for a review</small></p>
+                                            <p><small>{{ post.ticket.user }} a demandé une critique</small></p>
                                             <p>{{ post.ticket.title }}</p>
                                             <p>{{ post.ticket.description }}</p>
                                             <div class="p-2 w-25">
@@ -69,12 +75,18 @@
                                     <div class="p-2">
                                             <span class="float-end"><small>{{ post.time_created}}</small></span>
                                             <p><small>{{ post.user }} a publié une critique</small></p>
-                                            <h5>{{ post.headline }} - {{ post.rating }}</h5>
+                                            <h5>{{ post.headline }} - 
+                                                {% with ''|center:post.rating as range %}
+                                                {% for i in range %}
+                                                    <span>&#x2605; </span>
+                                                {% endfor %}
+                                                {% endwith %}
+                                            </h5>
                                             <div> {{ post.body }} </div>
                                     </div>
                                     <div class="border m-2">
                                         <span class="float-end"><small>{{ post.ticket.time_created}}</small></span>
-                                        <p><small>{{ post.ticket.user }} asked for a revieww</small></p>
+                                        <p><small>{{ post.ticket.user }} a demandé une critique</small></p>
                                         <p>{{ post.ticket.title }}</p>
                                         <p>{{ post.ticket.description }}</p>
                                         <div class="p-2 w-25">

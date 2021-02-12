@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 
 
 class RegisterForm(forms.ModelForm):
-    password_repeat = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password_repeat = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+        )
 
     class Meta:
         model = User
