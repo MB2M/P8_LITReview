@@ -59,7 +59,7 @@ def add_ticket(request, ticket_id=None):
             user=request.user.id
         )
     else:
-        None
+        ticket = None
     if request.method == 'POST':
         form_ticket = TicketForm(request.POST, request.FILES, instance=ticket)
         if form_ticket.is_valid():

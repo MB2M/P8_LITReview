@@ -1,6 +1,7 @@
 from django.contrib.auth import login
 from django.shortcuts import redirect, render
 from .forms import RegisterForm
+from django.contrib.auth.models import User
 
 
 def user_register(request):
@@ -14,13 +15,11 @@ def user_register(request):
                     'error_message': 'Les mots de passe ne correspondent pas'
                 })
             else:
-                user = form.save()
-                # user = User.objects.create_user(
-                #     form.cleaned_data['username'],
-                #     form.cleaned_data['email'],
-                #     form.cleaned_data['password']
-                # )
-                # user.save()
+                user = User.objects.create_user(
+                    username=form.cleaned_data['username'],
+                    password=form.cleaned_data['password']
+                )
+                user.save()
 
                 login(request, user)
 
